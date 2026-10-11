@@ -24,45 +24,50 @@ jobs:
         run: |
           pip install requests pandas
 
-      - name: Ejecutar script del sensor 00:1F:94:03:06:CD
+      - name: Ejecutar sensor 00:1F:94:03:06:CD
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: python "00:1F:94:03:06:CD/script.py"
+        working-directory: 00:1F:94:03:06:CD
+        run: python script.py
 
-      - name: Ejecutar script del sensor 00:1F:94:03:06:CE
+      - name: Ejecutar sensor 00:1F:94:03:06:CE
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: python "00:1F:94:03:06:CE/script.py"
+        working-directory: 00:1F:94:03:06:CE
+        run: python script.py
 
-      - name: Ejecutar script del sensor 00:1F:94:03:06:D0
+      - name: Ejecutar sensor 00:1F:94:03:06:D0
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: python "00:1F:94:03:06:D0/script.py"
+        working-directory: 00:1F:94:03:06:D0
+        run: python script.py
 
-      - name: Ejecutar script del sensor 98:8B:AD:20:2E:72
+      - name: Ejecutar sensor 98:8B:AD:20:2E:72
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: python "98:8B:AD:20:2E:72/script.py"
+        working-directory: 98:8B:AD:20:2E:72
+        run: python script.py
 
-      - name: Ejecutar script del sensor 98:8B:AD:20:2E:7E
+      - name: Ejecutar sensor 98:8B:AD:20:2E:7E
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: python "98:8B:AD:20:2E:7E/script.py"
+        working-directory: 98:8B:AD:20:2E:7E
+        run: python script.py
 
       - name: Guardar cambios en el repositorio
         run: |
           git config --global user.name "bot-actualizador"
           git config --global user.email "bot@actions.github.com"
           git add .
-          git diff --staged --quiet || git commit -m "Actualización automática de todos los sensores"
+          git diff --staged --quiet || git commit -m "Actualización automática de todos los sensores en sus carpetas"
           git push origin main
