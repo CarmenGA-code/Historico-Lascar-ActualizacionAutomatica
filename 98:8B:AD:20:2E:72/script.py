@@ -5,23 +5,23 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 print("----------------------------------------------------------------")
-print("Iniciando descarga y generación de gráficos de los últimos 7 días...")
+print("Iniciando descarga y generación (Sensor de Temperatura y Humedad)...")
 print("----------------------------------------------------------------\n")
 
 # ==============================================================================
-# 1. CREDENCIALES Y CONFIGURACIÓN (Solo modificas la MAC del sensor que quieras)
+# 1. CREDENCIALES Y CONFIGURACIÓN (Cambia la MAC según la carpeta en la que estés)
 # ==============================================================================
 API_TOKEN = os.getenv("API_TOKEN")
 EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
 
 CONFIGURACION_SENSOR = {
-    "mac": "98:8B:AD:20:2E:72",  # Cambia esta MAC para cada sensor que despliegues
+    "mac": "98:8B:AD:20:2E:72"
 }
 
 try:
     # ==============================================================================
-    # 2. LOGIN Y OBTENCIÓN DE GUIDs Y NOMBRE DEL DISPOSITIVO
+    # 2. LOGIN Y OBTENCIÓN DE GUIDs
     # ==============================================================================
     url_login = "https://apiwww.easylogcloud.com/Users.svc/Login"
     params_login = {"APIToken": API_TOKEN, "email": EMAIL, "password": PASSWORD}
@@ -44,7 +44,7 @@ try:
     FECHA_INICIO_html = fecha_inicio_dt.strftime('%d/%m/%Y')
 
     # ==============================================================================
-    # 4. PETICIÓN DEL HISTÓRICO DE 7 DÍAS A LA API
+    # 4. PETICIÓN DEL HISTÓRICO A LA API
     # ==============================================================================
     url_readings = "https://apiwww.easylogcloud.com/Devices.svc/Readings"
     params_readings = {
@@ -64,7 +64,7 @@ try:
         exit()
 
     # ==============================================================================
-    # 5. PROCESAMIENTO DE DATOS CON PANDAS
+    # 5. PROCESAMIENTO DE DATOS (Solo Temperatura y Humedad)
     # ==============================================================================
     filas_matriz = []
     for item in datos_crudos:
@@ -78,26 +78,23 @@ try:
 
             temp = float(str(channels[0]).replace("°C", "").strip()) if channels[0] is not None else 0.0
             hum = float(str(channels[1]).replace("%RH", "").strip()) if channels[1] is not None else 0.0
-            co2 = float(str(channels[2]).replace("ppm", "").strip()) if len(channels) > 2 and channels[2] is not None else 0.0
 
-            filas_matriz.append([fecha_hora, temp, hum, co2])
+            filas_matriz.append([fecha_hora, temp, hum])
 
-    matriz_df = pd.DataFrame(filas_matriz, columns=["FECHA_HORA", "TEMPERATURA", "HUMEDAD", "CO2"])
+    matriz_df = pd.DataFrame(filas_matriz, columns=["FECHA_HORA", "TEMPERATURA", "HUMEDAD"])
     matriz_df = matriz_df.sort_values("FECHA_HORA")
 
     fechas_list = matriz_df["FECHA_HORA"].dt.strftime("%d %b. %H:%M").tolist()
     temp_list = matriz_df["TEMPERATURA"].round(2).tolist()
     hum_list = matriz_df["HUMEDAD"].round(2).tolist()
-    co2_list = matriz_df["CO2"].round(0).tolist()
 
     # ==============================================================================
-    # 6. GUARDAR EN 'datos.json'
+    # 6. GUARDAR DATOS EN JSON
     # ==============================================================================
     datos_para_web = {
         "labels": fechas_list,
         "temperatura": temp_list,
-        "humedad": hum_list,
-        "co2": co2_list
+        "humedad": hum_list
     }
 
     with open('datos.json', 'w', encoding='utf-8') as f:
@@ -105,9 +102,8 @@ try:
     print("¡Archivo datos.json actualizado con éxito!")
 
     # ==============================================================================
-    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Sin mención a espacios)
+    # 7. DEFINICIÓN DE LA FUNCIÓN HTML (Sin CO2)
     # ==============================================================================
-    
     def generar_html(nombre_variable, unidad_medida, titulo_grafico, lista_valores, nombre_archivo):
         html_content = f"""
 <!DOCTYPE html>
@@ -133,7 +129,6 @@ try:
     <div class="nav">
         <a href="index.html" class="{'active' if nombre_archivo=='index.html' else ''}">Temperatura</a>
         <a href="humedad.html" class="{'active' if nombre_archivo=='humedad.html' else ''}">Humedad</a>
-        <a href="co2.html" class="{'active' if nombre_archivo=='co2.html' else ''}">CO2</a>
     </div>
 
     <div class="container">
@@ -187,13 +182,14 @@ try:
             f.write(html_content)
         print(f"Generado archivo: {nombre_archivo}")
 
-    # Generación de archivos limpios centrados exclusivamente en las mediciones
+    # ==============================================================================
+    # 8. LLAMADA PARA CREAR LOS HTML (Solo Temperatura y Humedad)
+    # ==============================================================================
     generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "index.html")
     generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "temperatura.html")
     generar_html("Humedad", "%", "Evolución de Humedad", hum_list, "humedad.html")
-    generar_html("CO2", "ppm", "Evolución de CO2", co2_list, "co2.html")
 
-    print("\n¡Proceso completo y generación de web finalizada con éxito!")
+    print("\n¡Proceso completado con éxito para este sensor!")
 
 except Exception as e:
     print(f"Error durante la ejecución del script: {e}")
