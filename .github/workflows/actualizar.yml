@@ -2,7 +2,7 @@ name: Actualizar Todos los Sensores
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # Todos los días a las 06:00 UTC
+    - cron: '20 9 * * *'  # Todos los días a las 06:00 UTC
   workflow_dispatch:      # Ejecución manual
 
 permissions:
