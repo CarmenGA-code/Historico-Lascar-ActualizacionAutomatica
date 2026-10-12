@@ -105,10 +105,10 @@ try:
     print("¡Archivo datos.json actualizado con éxito!")
 
     # ==============================================================================
-    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Sin mención a espacios)
+    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Leyendo de datos.json)
     # ==============================================================================
     
-    def generar_html(nombre_variable, unidad_medida, titulo_grafico, lista_valores, nombre_archivo):
+    def generar_html(nombre_variable, unidad_medida, titulo_grafico, clave_json, nombre_archivo):
         html_content = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -145,40 +145,51 @@ try:
         </div>
     </div>
     <script>
-        const ctx = document.getElementById('sensorChart').getContext('2d');
-        const chart = new Chart(ctx, {{
-            type: 'line',
-            data: {{
-                labels: {json.dumps(fechas_list)},
-                datasets: [{{
-                    label: '{nombre_variable} ({unidad_medida})',
-                    data: {json.dumps(lista_valores)},
-                    borderColor: 'crimson',
-                    backgroundColor: 'rgba(220, 20, 60, 0.1)',
-                    borderWidth: 1.5,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                    fill: false,
-                    tension: 0.1
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {{
-                    title: {{
-                        display: true,
-                        text: '{titulo_grafico} ({FECHA_INICIO_html} al {FECHA_FIN_html})',
-                        font: {{ size: 16, weight: 'bold' }}
+        async function cargarGrafica() {{
+            try {{
+                const response = await fetch('datos.json');
+                const dataSensor = await response.json();
+
+                const ctx = document.getElementById('sensorChart').getContext('2d');
+                new Chart(ctx, {{
+                    type: 'line',
+                    data: {{
+                        labels: dataSensor.labels,
+                        datasets: [{{
+                            label: '{nombre_variable} ({unidad_medida})',
+                            data: dataSensor.{clave_json},
+                            borderColor: 'crimson',
+                            backgroundColor: 'rgba(220, 20, 60, 0.1)',
+                            borderWidth: 1.5,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            fill: false,
+                            tension: 0.1
+                        }}]
                     }},
-                    legend: {{ display: false }},
-                    zoom: {{
-                        zoom: {{ wheel: {{ enabled: true }}, pinch: {{ enabled: true }}, mode: 'x' }},
-                        pan: {{ enabled: true, mode: 'x' }}
+                    options: {{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {{
+                            title: {{
+                                display: true,
+                                text: '{titulo_grafico} ({FECHA_INICIO_html} al {FECHA_FIN_html})',
+                                font: {{ size: 16, weight: 'bold' }}
+                            }},
+                            legend: {{ display: false }},
+                            zoom: {{
+                                zoom: {{ wheel: {{ enabled: true }}, pinch: {{ enabled: true }}, mode: 'x' }},
+                                pan: {{ enabled: true, mode: 'x' }}
+                            }}
+                        }}
                     }}
-                }}
+                }});
+            }} catch (error) {{
+                console.error('Error al cargar datos.json:', error);
             }}
-        }});
+        }}
+
+        cargarGrafica();
     </script>
 </body>
 </html>
@@ -187,11 +198,11 @@ try:
             f.write(html_content)
         print(f"Generado archivo: {nombre_archivo}")
 
-    # Generación de archivos limpios centrados exclusivamente en las mediciones
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "index.html")
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "temperatura.html")
-    generar_html("Humedad", "%", "Evolución de Humedad", hum_list, "humedad.html")
-    generar_html("CO2", "ppm", "Evolución de CO2", co2_list, "co2.html")
+    # Generación de archivos pasando la clave correspondiente del JSON
+    generar_html("Temperatura", "ºC", "Evolución de Temperatura", "temperatura", "index.html")
+    generar_html("Temperatura", "ºC", "Evolución de Temperatura", "temperatura", "temperatura.html")
+    generar_html("Humedad", "%", "Evolución de Humedad", "humedad", "humedad.html")
+    generar_html("CO2", "ppm", "Evolución de CO2", "co2", "co2.html")
 
     print("\n¡Proceso completo y generación de web finalizada con éxito!")
 
