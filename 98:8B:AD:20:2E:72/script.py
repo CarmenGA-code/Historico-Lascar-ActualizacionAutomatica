@@ -16,7 +16,7 @@ EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
 
 CONFIGURACION_SENSOR = {
-    "mac": "98:8B:AD:20:2E:72"
+    "mac": "98:8B:AD:20:2E:72"   # Cambio de MAC para cada sensor 
 }
 
 try:
