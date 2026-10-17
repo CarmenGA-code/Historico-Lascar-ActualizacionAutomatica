@@ -185,9 +185,9 @@ try:
     # ==============================================================================
     # 8. LLAMADA PARA CREAR LOS HTML (Solo Temperatura y Humedad)
     # ==============================================================================
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "index.html")
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "temperatura.html")
-    generar_html("Humedad", "%", "Evolución de Humedad", hum_list, "humedad.html")
+    generar_html("Temperatura", "ºC", "Evolución de Temperatura - Aula 0.1", temp_list, "index.html")
+    generar_html("Temperatura", "ºC", "Evolución de Temperatura - Aula 0.1", temp_list, "temperatura.html")
+    generar_html("Humedad", "%", "Evolución de Humedad - Aula 0.1", hum_list, "humedad.html")
 
     print("\n¡Proceso completado con éxito para este sensor!")
 
