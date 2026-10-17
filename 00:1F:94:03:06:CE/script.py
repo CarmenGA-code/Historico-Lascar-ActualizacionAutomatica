@@ -158,7 +158,7 @@ try:
                     borderWidth: 2,              
                     pointRadius: 0,
                     pointHoverRadius: 5,
-                    fill: { target: false },
+                    fill: false,
                     tension: 0.1
                 }}]
             }},
