@@ -71,18 +71,37 @@ try:
         datetime_val = item.get("datetime")
         channels = item.get("channels", [])
 
-        if datetime_val and len(channels) >= 2:
-            posicion = datetime_val.find("(") + 1
-            timestamp_recortado = int(datetime_val[posicion : posicion + 10])
-            fecha_hora = datetime.fromtimestamp(timestamp_recortado)
+        if datetime_val:
+            try:
+                # Extracción segura del timestamp
+                posicion = datetime_val.find("(") + 1
+                if posicion > 0:
+                    timestamp_recortado = int(datetime_val[posicion : posicion + 10])
+                else:
+                    timestamp_recortado = int(datetime_val)
+                
+                fecha_hora = datetime.fromtimestamp(timestamp_recortado)
 
-            temp = float(str(channels[0]).replace("°C", "").strip()) if channels[0] is not None else 0.0
-            hum = float(str(channels[1]).replace("%RH", "").strip()) if channels[1] is not None else 0.0
-            co2 = float(str(channels[2]).replace("ppm", "").strip()) if len(channels) > 2 and channels[2] is not None else 0.0
+                # Extracción segura de canales con valores por defecto (0.0 o None)
+                temp = float(str(channels[0]).replace("°C", "").strip()) if len(channels) > 0 and channels[0] is not None else 0.0
+                hum = float(str(channels[1]).replace("%RH", "").strip()) if len(channels) > 1 and channels[1] is not None else 0.0
+                co2 = float(str(channels[2]).replace("ppm", "").strip()) if len(channels) > 2 and channels[2] is not None else 0.0
 
-            filas_matriz.append([fecha_hora, temp, hum, co2])
+                filas_matriz.append([fecha_hora, temp, hum, co2])
+            except (ValueError, TypeError) as e:
+                # Ignorar registros con formato corrupto
+                continue
 
     matriz_df = pd.DataFrame(filas_matriz, columns=["FECHA_HORA", "TEMPERATURA", "HUMEDAD", "CO2"])
+    
+    # --- FILTRO DE LIMPIEZA PARA ELIMINAR ERRORES DEL SENSOR ---
+    matriz_df = matriz_df[
+        (matriz_df["TEMPERATURA"] > 0) & 
+        (matriz_df["HUMEDAD"] > 0) & 
+        (matriz_df["CO2"] > 0)
+    ]
+    # ----------------------------------------------------------
+
     matriz_df = matriz_df.sort_values("FECHA_HORA")
 
     fechas_list = matriz_df["FECHA_HORA"].dt.strftime("%d %b. %H:%M").tolist()
