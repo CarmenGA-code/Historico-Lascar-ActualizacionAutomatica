@@ -188,9 +188,9 @@ try:
         print(f"Generado archivo: {nombre_archivo}")
 
     # Generar los archivos web (index.html será el de Temperatura con un menú superior para cambiar)
-    generar_html("Temperatura", "ºC", "Evolución de la Temperatura - Aula 1.5", temp_list, "index.html")
-    generar_html("Humedad", "%", "Evolución de la Humedad - Aula 1.5", hum_list, "humedad.html")
-    generar_html("CO2", "ppm", "Evolución del CO2 - Aula 1.5", co2_list, "co2.html")
+    generar_html("Temperatura", "ºC", "Evolución de la Temperatura - Aula 0.1", temp_list, "index.html")
+    generar_html("Humedad", "%", "Evolución de la Humedad - Aula 0.1", hum_list, "humedad.html")
+    generar_html("CO2", "ppm", "Evolución del CO2 - Aula 0.1", co2_list, "co2.html")
 
     print("\n¡Proceso completo y generación de web finalizada con éxito!")
 
