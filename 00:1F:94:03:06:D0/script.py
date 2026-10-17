@@ -16,8 +16,7 @@ EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
 
 CONFIGURACION_SENSOR = {
-    "mac": "00:1F:94:03:06:D0",   # Cambio de MAC para cada sensor 
-    "nota": "Aula 1.5 (Temp + RH + CO2)"
+    "mac": "00:1F:94:03:06:D0"   # Cambio de MAC para cada sensor 
 }
 
 try:
