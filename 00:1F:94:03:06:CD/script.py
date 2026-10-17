@@ -9,14 +9,14 @@ print("Iniciando descarga y generación de gráficos de los últimos 7 días..."
 print("----------------------------------------------------------------\n")
 
 # ==============================================================================
-# 1. CREDENCIALES Y CONFIGURACIÓN
+# 1. CREDENCIALES Y CONFIGURACIÓN (Solo modificas la MAC del sensor que quieras)
 # ==============================================================================
 API_TOKEN = os.getenv("API_TOKEN")
 EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
 
 CONFIGURACION_SENSOR = {
-    "mac": "00:1F:94:03:06:CD"
+    "mac": "00:1F:94:03:06:CD"  # Cambio de MAC para cada sensor 
 }
 
 try:
@@ -91,7 +91,7 @@ try:
     co2_list = matriz_df["CO2"].round(0).tolist()
 
     # ==============================================================================
-    # 6. GUARDAR EN 'datos.json' (Por si lo necesitas de respaldo)
+    # 6. GUARDAR EN 'datos.json'
     # ==============================================================================
     datos_para_web = {
         "labels": fechas_list,
@@ -105,7 +105,7 @@ try:
     print("¡Archivo datos.json actualizado con éxito!")
 
     # ==============================================================================
-    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Inyección directa limpia)
+    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Sin mención a espacios)
     # ==============================================================================
     
     def generar_html(nombre_variable, unidad_medida, titulo_grafico, lista_valores, nombre_archivo):
@@ -154,6 +154,7 @@ try:
                     label: '{nombre_variable} ({unidad_medida})',
                     data: {json.dumps(lista_valores)},
                     borderColor: 'crimson',
+                    backgroundColor: 'rgba(220, 20, 60, 0.1)',
                     borderWidth: 1.5,
                     pointRadius: 0,
                     pointHoverRadius: 5,
@@ -186,7 +187,7 @@ try:
             f.write(html_content)
         print(f"Generado archivo: {nombre_archivo}")
 
-    # Generación de archivos pasando las listas de valores correspondientes
+    # Generación de archivos limpios centrados exclusivamente en las mediciones
     generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "index.html")
     generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "temperatura.html")
     generar_html("Humedad", "%", "Evolución de Humedad", hum_list, "humedad.html")
