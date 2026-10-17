@@ -154,7 +154,6 @@ try:
                     label: '{nombre_variable} ({unidad_medida})',
                     data: {json.dumps(lista_valores)},
                     borderColor: 'crimson',
-                    backgroundColor: 'rgba(220, 20, 60, 0.1)',
                     borderWidth: 1.5,
                     pointRadius: 0,
                     pointHoverRadius: 5,
