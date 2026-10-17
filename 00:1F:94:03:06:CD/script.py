@@ -188,10 +188,10 @@ try:
         print(f"Generado archivo: {nombre_archivo}")
 
     # Generación de archivos limpios centrados exclusivamente en las mediciones
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "index.html")
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "temperatura.html")
-    generar_html("Humedad", "%", "Evolución de Humedad", hum_list, "humedad.html")
-    generar_html("CO2", "ppm", "Evolución de CO2", co2_list, "co2.html")
+    generar_html("Temperatura", "ºC", "Evolución de Temperatura - Aula 0.13", temp_list, "index.html")
+    generar_html("Temperatura", "ºC", "Evolución de Temperatura - Aula 0.13", temp_list, "temperatura.html")
+    generar_html("Humedad", "%", "Evolución de Humedad - Aula 0.13", hum_list, "humedad.html")
+    generar_html("CO2", "ppm", "Evolución de CO2 - Aula 0.13", co2_list, "co2.html")
 
     print("\n¡Proceso completo y generación de web finalizada con éxito!")
 
