@@ -154,11 +154,11 @@ try:
                     label: '{nombre_variable} ({unidad_medida})',
                     data: {json.dumps(lista_valores)},
                     borderColor: 'crimson',
-                    backgroundColor: 'transparent',  // <--- Cambiado a transparente
-                    borderWidth: 2,                  // <--- Opcional: un poco más grueso para que se vea bien
+                    backgroundColor: 'transparent', 
+                    borderWidth: 2,              
                     pointRadius: 0,
                     pointHoverRadius: 5,
-                    fill: false,
+                    fill: { target: false },
                     tension: 0.1
                 }}]
             }},
