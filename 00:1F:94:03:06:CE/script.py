@@ -9,19 +9,19 @@ print("Iniciando descarga y generación de gráficos de los últimos 7 días..."
 print("----------------------------------------------------------------\n")
 
 # ==============================================================================
-# 1. CREDENCIALES Y CONFIGURACIÓN (Solo modificas la MAC del sensor que quieras)
+# 1. CREDENCIALES SEGURAS (Leídas desde los Secrets de GitHub)
 # ==============================================================================
 API_TOKEN = os.getenv("API_TOKEN")
 EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
 
 CONFIGURACION_SENSOR = {
-    "mac": "00:1F:94:03:06:CE"   # Cambio de MAC para cada sensor 
+    "mac": "00:1F:94:03:06:CE"    # Cambio de MAC para cada sensor 
 }
 
 try:
     # ==============================================================================
-    # 2. LOGIN Y OBTENCIÓN DE GUIDs Y NOMBRE DEL DISPOSITIVO
+    # 2. LOGIN Y OBTENCIÓN DE GUIDs
     # ==============================================================================
     url_login = "https://apiwww.easylogcloud.com/Users.svc/Login"
     params_login = {"APIToken": API_TOKEN, "email": EMAIL, "password": PASSWORD}
@@ -105,7 +105,7 @@ try:
     print("¡Archivo datos.json actualizado con éxito!")
 
     # ==============================================================================
-    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Sin mención a espacios)
+    # 7. GENERACIÓN DE LOS ARCHIVOS HTML INTERACTIVOS (Incluyendo index.html)
     # ==============================================================================
     
     def generar_html(nombre_variable, unidad_medida, titulo_grafico, lista_valores, nombre_archivo):
@@ -187,11 +187,10 @@ try:
             f.write(html_content)
         print(f"Generado archivo: {nombre_archivo}")
 
-    # Generación de archivos limpios centrados exclusivamente en las mediciones
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "index.html")
-    generar_html("Temperatura", "ºC", "Evolución de Temperatura", temp_list, "temperatura.html")
-    generar_html("Humedad", "%", "Evolución de Humedad", hum_list, "humedad.html")
-    generar_html("CO2", "ppm", "Evolución de CO2", co2_list, "co2.html")
+    # Generar los archivos web (index.html será el de Temperatura con un menú superior para cambiar)
+    generar_html("Temperatura", "ºC", "Evolución de la Temperatura - Aula 1.5", temp_list, "index.html")
+    generar_html("Humedad", "%", "Evolución de la Humedad - Aula 1.5", hum_list, "humedad.html")
+    generar_html("CO2", "ppm", "Evolución del CO2 - Aula 1.5", co2_list, "co2.html")
 
     print("\n¡Proceso completo y generación de web finalizada con éxito!")
 
